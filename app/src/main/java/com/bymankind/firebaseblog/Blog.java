@@ -5,16 +5,17 @@ package com.bymankind.firebaseblog;
  */
 
 public class Blog {
-    private String title,desc,image;
+    private String title,description,image, key;
 
     public Blog(){
 
     }
 
-    public Blog(String title, String desc, String image) {
+    public Blog(String title, String description, String image, String key) {
         this.title = title;
-        this.desc = desc;
+        this.description = description;
         this.image = image;
+        this.key = key;
     }
 
     public String getTitle() {
@@ -25,12 +26,12 @@ public class Blog {
         this.title = title;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImage() {
@@ -39,5 +40,13 @@ public class Blog {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

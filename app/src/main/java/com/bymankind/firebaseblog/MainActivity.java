@@ -7,64 +7,40 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private RecyclerView mLogList;
+    private List<Blog> result = new ArrayList<>();
+    private MainAdapter mainAdapter;
+
 
     private DatabaseReference mDatabase;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Blog");
+
         mLogList = (RecyclerView) findViewById(R.id.blog_list);
         mLogList.setHasFixedSize(true);
         mLogList.setLayoutManager(new LinearLayoutManager(this));
 
-    }
+        mainAdapter = new MainAdapter(getApplicationContext(), result);
+        mLogList.setAdapter(mainAdapter);
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseRecyclerAdapter<Blog, BlogViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Blog, BlogViewHolder>() {
-            @Override
-            protected void onBindViewHolder(BlogViewHolder holder, int position, Blog model) {
-
-            }
-
-            @Override
-            public BlogViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return null;
-            }
-        };
-    }
-
-    public static class BlogViewHolder extends RecyclerView.ViewHolder{
-        View mView;
-        public BlogViewHolder(View itemView) {
-            super(itemView);
-            itemView = mView;
-
-        }
-
-        public void setTitle(String title){
-            TextView post_title = (TextView) mView.findViewById(R.id.post_title);
-            post_title.setText(title);
-        }
-
-        public void setDesc(String desc){
-            TextView post_desc = (TextView) mView.findViewById(R.id.post_desc);
-            post_desc.setText(desc);
-        }
+        updateList();
     }
 
     @Override
@@ -81,4 +57,55 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void updateList(){
+        mDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                result.add(dataSnapshot.getValue(Blog.class));
+                mainAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Blog blog = dataSnapshot.getValue(Blog.class);
+                int index = getItemIndex(blog);
+
+                result.set(index, blog);
+                mainAdapter.notifyItemChanged(index);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Blog blog = dataSnapshot.getValue(Blog.class);
+                int index = getItemIndex(blog);
+
+                result.remove(index);
+                mainAdapter.notifyItemRemoved(index);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private int getItemIndex(Blog blog){
+        int index = -1;
+
+        for (int i=0;i <result.size();i++){
+            if (result.get(i).getKey().equals(blog.getKey())){
+                index = i ;
+                break;
+            }
+        }
+        return index;
+    }
+
 }
