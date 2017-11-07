@@ -5,7 +5,7 @@ package com.bymankind.firebaseblog;
  */
 
 public class Blog {
-    private String title,description,image, key;
+    private String title,description,image,key;
 
     public Blog(){
 
@@ -15,7 +15,7 @@ public class Blog {
         this.title = title;
         this.description = description;
         this.image = image;
-        this.key = key;
+        this.key = key ;
     }
 
     public String getTitle() {

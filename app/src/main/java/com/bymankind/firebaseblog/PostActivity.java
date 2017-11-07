@@ -20,6 +20,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PostActivity extends AppCompatActivity {
     private ImageButton mSelectImage;
     private EditText mPostTitle;
@@ -84,11 +87,16 @@ public class PostActivity extends AppCompatActivity {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
-                DatabaseReference newPost = mDatabase.push();
+                /*DatabaseReference newPost = mDatabase.push();
 
                 newPost.child("title").setValue(title_val);
                 newPost.child("description").setValue(desc_val);
                 newPost.child("image").setValue(downloadUrl.toString());
+                newPost.child("key").setValue(newPost.getKey());*/
+
+
+                mDatabase.child(title_val).setValue(new Blog(title_val,desc_val,downloadUrl.toString(),"12345"));
+
                 mProgress.dismiss();
 
                 startActivity(new Intent(PostActivity.this, MainActivity.class));
