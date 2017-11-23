@@ -87,15 +87,15 @@ public class PostActivity extends AppCompatActivity {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
-                /*DatabaseReference newPost = mDatabase.push();
+                DatabaseReference newPost = mDatabase.push();
 
                 newPost.child("title").setValue(title_val);
-                newPost.child("description").setValue(desc_val);
+                newPost.child("detail").child("description").setValue(desc_val);
                 newPost.child("image").setValue(downloadUrl.toString());
-                newPost.child("key").setValue(newPost.getKey());*/
+                newPost.child("key").setValue(newPost.getKey());
 
 
-                mDatabase.child(title_val).setValue(new Blog(title_val,desc_val,downloadUrl.toString(),"12345"));
+             //   mDatabase.child(title_val).setValue(new Blog(title_val,desc_val,downloadUrl.toString(),"12345"));
 
                 mProgress.dismiss();
 

@@ -87,7 +87,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     }
 
 
-
     public class MainViewHolder extends RecyclerView.ViewHolder {
         TextView post_title;
         EditText post_desc;
